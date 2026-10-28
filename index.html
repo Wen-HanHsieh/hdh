@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="static/css/style.css?v=3">
+  <link rel="stylesheet" href="static/css/style.css?v=4">
 </head>
 <body>
 <div id="progress"></div>
@@ -51,10 +51,9 @@
   <div class="wrap">
     <div class="hero-grid">
       <div>
-        <div class="kicker"><i></i>Frozen VLA · learned verifier · K = 2</div>
         <h1 class="title">Learning <span class="nw">Low-Latency</span><br><span class="grad">Action Verification</span></h1>
         <div class="subtitle">for Frozen Vision-Language-Action Models</div>
-        <p class="tagline">HDH learns from a frozen VLA's own rollouts which of its sampled actions to execute. It needs <b>no VLA fine-tuning</b> and adds only <b>5.4%</b> median latency per query.</p>
+        <p class="tagline">A tiny verifier, trained on the policy's own successes and failures, picks the better of two sampled actions. <b>No VLA fine-tuning.</b></p>
 
         <div class="authors">
           <span>Wen-Han Hsieh<sup>1</sup></span>,
@@ -105,10 +104,10 @@
     </div>
 
     <div class="stats">
-      <div class="stat hi"><div class="v"><span data-count="67.3" data-dec="1">0</span><small>%</small></div><div class="l">real-world success across three tasks, up from 44.7%</div></div>
-      <div class="stat"><div class="v"><span data-count="82.3" data-dec="1">0</span><small>%</small></div><div class="l">average success on four LIBERO-10 tasks, vs 78.8% for the frozen policy</div></div>
-      <div class="stat"><div class="v">+<span data-count="5.4" data-dec="1">0</span><small>%</small></div><div class="l">median query latency over the frozen policy</div></div>
-      <div class="stat"><div class="v"><span data-count="10.3" data-dec="1">0</span><small>× faster</small></div><div class="l">than a GPT-6 verifier per query, with higher success</div></div>
+      <div class="stat hi"><div class="v"><span data-count="67.3" data-dec="1">0</span><small>%</small></div><div class="l">real-world success, from 44.7%</div></div>
+      <div class="stat"><div class="v"><span data-count="82.3" data-dec="1">0</span><small>%</small></div><div class="l">LIBERO-10 success, from 78.8%</div></div>
+      <div class="stat"><div class="v">+<span data-count="5.4" data-dec="1">0</span><small>%</small></div><div class="l">median latency overhead</div></div>
+      <div class="stat"><div class="v"><span data-count="10.3" data-dec="1">0</span><small>×</small></div><div class="l">faster than a GPT-6 verifier</div></div>
     </div>
   </div>
 </header>
@@ -119,7 +118,7 @@
     <div class="sec-head reveal">
       <div class="eyebrow">Overview</div>
       <h2 class="h2">Let the policy's own rollouts decide which action to execute.</h2>
-      <p class="lede">A VLA's sampled action chunks vary in quality, and large VLM verifiers are too slow to check them at every query. HDH trains a <b>compact verifier</b> on the terminal outcomes of the frozen policy's past rollouts. At each query it scores two sampled candidates and the robot executes the more promising one.</p>
+      <p class="lede">A <b>compact verifier</b>, trained on the outcomes of the frozen policy's own rollouts, chooses between two sampled action chunks at every query.</p>
       <details class="more abstract">
         <summary>Read the abstract</summary>
         <p>Vision-language-action (VLA) models have made significant progress in general-purpose robotic manipulation. However, sampled action sequences can be ineffective, while evaluating alternatives with computationally expensive verifiers adds latency at each policy query. In this work, we propose HDH, a lightweight framework that uses hindsight from a frozen VLA's own deployments to improve action verification. The framework has three stages. First, we deploy the policy and collect its autonomous rollouts. We then train a compact action verifier to assign each action chunk a predicted task-success score. Finally, the frozen VLA generates action candidates, and the verifier selects the candidate with the highest score for execution. Across four LIBERO-10 tasks, HDH achieves an average success rate of 82.3% and on three real-world manipulation tasks, HDH improves average success over the baseline policy by 22.6%.</p>
@@ -127,7 +126,7 @@
     </div>
 
     <div class="figure reveal"><img src="static/images/teaser.webp" alt="HDH overview: offline training on success and failure rollouts, a frozen VLA samples candidates, the HDH verifier scores them, and the robot executes the selected action." loading="lazy"></div>
-    <p class="caption reveal">We collect autonomous rollouts of the frozen policy and use their <b>terminal success and failure</b> to train a compact verifier (left). At each query, the verifier scores sampled action chunks from the <b>current observation and execution history</b> (center), and the robot executes the highest-scoring candidate (right).</p>
+    <p class="caption reveal"><b>Train</b> on rollout outcomes (left), <b>score</b> sampled candidates (center), <b>execute</b> the best one (right).</p>
   </div>
 </section>
 
@@ -137,7 +136,7 @@
     <div class="sec-head reveal">
       <div class="eyebrow">Real Robot</div>
       <h2 class="h2">HDH raises real-world success from 44.7% to 67.3%.</h2>
-      <p class="lede">We use a Franka Panda with the DROID setup and π0.5-DROID, fine-tuned with LoRA on 80 demonstrations. The policy controls joint velocity and gripper position at 15 Hz. HDH compares two candidates per query and executes 8 actions of the selected 16-step chunk. Each method is evaluated over <b>50 trials per task</b>.</p>
+      <p class="lede">Franka Panda with π0.5-DROID. <b>50 trials per task and method.</b></p>
     </div>
 
     <div class="scoreboard reveal">
@@ -152,7 +151,7 @@
       <button class="tab" data-task="closet" role="tab">Strawberry into closet <span class="sc">56% vs 32%</span></button>
     </div>
     <div id="realPanes" class="reveal"></div>
-    <p class="note reveal">Individual, unedited episodes at 2× speed, including failures of both methods. Pick an episode below each video.</p>
+    <p class="note reveal">Unedited episodes at 2×, failures included.</p>
   </div>
 </section>
 
@@ -162,40 +161,18 @@
     <div class="sec-head reveal">
       <div class="eyebrow">Method</div>
       <h2 class="h2">Learn from outcomes, then choose among samples.</h2>
-      <p class="lede">The VLA is never updated. HDH changes <b>which</b> sampled action is executed, not how candidates are generated.</p>
+      <p class="lede">The VLA is never updated.</p>
     </div>
 
     <div class="stages">
-      <div class="card stage reveal"><div class="k">Stage 01</div><h3>Collect</h3><p>Deploy the frozen policy with one sampled chunk per query and record its autonomous rollouts with their terminal success or failure.</p></div>
-      <div class="card stage reveal"><div class="k">Stage 02</div><h3>Train</h3><p>Label every query of an episode with that episode's outcome and train a compact verifier to predict eventual task success of the executed prefix. Splits are made at the episode level.</p></div>
-      <div class="card stage reveal"><div class="k">Stage 03</div><h3>Select</h3><p>At each query, draw K = 2 candidates with independently seeded flow-matching noise, score both, and execute the first H = 8 actions of the highest-scoring one.</p></div>
+      <div class="card stage reveal"><div class="k">Stage 01</div><h3>Collect</h3><p>Roll out the frozen policy and record success or failure.</p></div>
+      <div class="card stage reveal"><div class="k">Stage 02</div><h3>Train</h3><p>Label every query with its episode's outcome and train a compact verifier.</p></div>
+      <div class="card stage reveal"><div class="k">Stage 03</div><h3>Select</h3><p>Sample two action chunks and execute 8 actions of the higher-scoring one.</p></div>
     </div>
 
     <div class="figure reveal"><img src="static/images/overview.webp" alt="HDH action selection: inputs, sampled candidates from a frozen VLA, verifier scoring, and execution of the selected prefix." loading="lazy"></div>
-    <p class="caption reveal">(a) Given the instruction, images and proprioception, (b) we sample candidate action chunks from a frozen VLA. (c) A compact verifier trained on terminal rollout outcomes assigns each candidate a predicted task-success score. (d) The robot executes the first H actions of the best candidate.</p>
+    <p class="caption reveal">(a) Observe, (b) sample candidates from the frozen VLA, (c) score them, (d) execute the best.</p>
 
-    <div class="round">
-      <div class="card reveal">
-        <h3>What the verifier sees</h3>
-        <ol class="steps">
-          <li>SigLIP prefix tokens of both cameras, taken from the frozen VLA and pooled to 8 × 8 per view (128 tokens)</li>
-          <li>An 8-D proprioceptive token and a constant per-task token</li>
-          <li>The candidate's executed prefix (H × 7 actions) as action tokens that self-attend, then cross-attend to the context</li>
-          <li><b>HDH only:</b> a GRU history token over up to three previous queries' observations, states and executed actions</li>
-        </ol>
-      </div>
-      <div class="card reveal">
-        <h3>Training and selection</h3>
-        <div class="gate"><span class="kw">loss</span> = BCE( f(x, U), 1 − y<sub>episode</sub> ) </div>
-        <div class="gate"><span class="kw">k*</span> = argmax<sub>k</sub> Q(x, U<sub>k</sub>), &nbsp; Q = 1 − σ(f)</div>
-        <dl class="kv">
-          <dt>size</dt><dd>~481K trainable parameters (HDM), one verifier per task</dd>
-          <dt>HDM</dt><dd>current observation only</dd>
-          <dt>HDH</dt><dd>adds causal execution history, reset every episode</dd>
-          <dt>speed</dt><dd>candidates share the prefix KV cache; verifier scores are batched</dd>
-        </dl>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -205,21 +182,21 @@
     <div class="sec-head reveal">
       <div class="eyebrow">Simulation</div>
       <h2 class="h2">82.3% on LIBERO-10 at near-baseline latency.</h2>
-      <p class="lede">All six methods share one frozen π0.5 fine-tuned on 50 public LIBERO demonstrations. Each method is evaluated on 50 held-out initial states per task over three runs. Timing is end-to-end per query on one H100, including simulation.</p>
+      <p class="lede">Same frozen π0.5 for all methods. 50 held-out states × 3 runs per task.</p>
     </div>
 
     <div class="results">
       <div class="card chart-card reveal">
         <div class="chart-head">
-          <div><h3>Accuracy vs. latency</h3><p>Median time per query (log scale) against average success. Hover a point.</p></div>
+          <div><h3>Accuracy vs. latency</h3><p>Median time per query, log scale.</p></div>
           <div class="legend"><span><i class="ours"></i>learned</span><span><i class="vlm"></i>VLM verifier</span><span><i></i>no verifier</span></div>
         </div>
         <svg id="tradeoff" role="img" aria-label="Average success versus median latency per query"></svg>
       </div>
       <div class="card chart-card reveal">
-        <div class="chart-head"><div><h3>Average success</h3><p>Unweighted mean over four tasks (axis from 70%).</p></div></div>
+        <div class="chart-head"><div><h3>Average success</h3><p>Mean over four tasks (axis from 70%).</p></div></div>
         <div class="bars" id="bars"></div>
-        <div class="callout"><b>History helps.</b> HDH improves over the history-free HDM from 80.3% to 82.3%, with the largest gains on Soup + Sauce (+6.7) and Mug + Pudding (+5.3). Both tasks need several interactions with different objects.</div>
+        <div class="callout"><b>History helps:</b> HDM 80.3% → HDH 82.3%.</div>
       </div>
     </div>
 
@@ -236,7 +213,7 @@
         </tbody>
       </table>
     </div>
-    <p class="note reveal">Success rate (%), mean ± std over three runs. <sup>†</sup>GPT-5 uses 15 states per task in a single run because of its slower inference.</p>
+    <p class="note reveal">Success (%), mean ± std over three runs. <sup>†</sup>15 states, one run.</p>
 
     <div class="sgrid">
       <figure class="stile reveal"><video data-src="static/videos/sim/libero_10_0.mp4" muted loop playsinline preload="none"></video><figcaption><div class="sname">Soup + Sauce into Basket</div><div class="ssub">HDH <b>76.7%</b> · baseline 73.3%</div></figcaption></figure>
@@ -263,7 +240,7 @@
   year    = {2026}
 }</pre>
     </div>
-    <p class="ack reveal">This work builds on <a href="https://github.com/Physical-Intelligence/openpi" target="_blank" rel="noopener">openpi</a>, <a href="https://droid-dataset.github.io/" target="_blank" rel="noopener">DROID</a> and <a href="https://libero-project.github.io/" target="_blank" rel="noopener">LIBERO</a>. The page design follows <a href="https://rpg-robot.github.io" target="_blank" rel="noopener">rpg-robot.github.io</a>.</p>
+    <p class="ack reveal">Built on <a href="https://github.com/Physical-Intelligence/openpi" target="_blank" rel="noopener">openpi</a>, <a href="https://droid-dataset.github.io/" target="_blank" rel="noopener">DROID</a> and <a href="https://libero-project.github.io/" target="_blank" rel="noopener">LIBERO</a>. Page design follows <a href="https://rpg-robot.github.io" target="_blank" rel="noopener">rpg-robot.github.io</a>.</p>
   </div>
 </section>
 
@@ -279,6 +256,6 @@
   </div>
 </footer>
 
-<script src="static/js/main.js?v=3"></script>
+<script src="static/js/main.js?v=4"></script>
 </body>
 </html>

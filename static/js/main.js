@@ -20,19 +20,19 @@
   const REAL = {
     plate: {
       name: "Plushie onto plate", hdh: 47, base: 32,
-      desc: "<b>Plushie onto plate.</b> Pick up the strawberry plushie and place it on the blue plate. When the plushie starts farther from the gripper, the baseline sometimes closes the gripper before reaching it; HDH keeps approaching before closing.",
+      desc: "<b>Plushie onto plate.</b> The baseline often closes the gripper too early; HDH keeps approaching.",
       hdhEps: [["success 1", "hdh_plate_success_1", 1], ["success 2", "hdh_plate_success_2", 1], ["failure", "hdh_plate_fail", 0]],
       baseEps: [["failure", "base_plate_fail", 0], ["success", "base_plate_success", 1]],
     },
     drawer: {
       name: "Cube out of drawer; close drawer", hdh: 26, base: 19,
-      desc: "<b>Cube out of drawer; close drawer.</b> Take the cube out of the open drawer, then push the drawer closed. Success requires both stages.",
+      desc: "<b>Cube out of drawer.</b> Take the cube out, then close the drawer.",
       hdhEps: [["success 1", "hdh_drawer_success_1", 1], ["success 2", "hdh_drawer_success_2", 1], ["failure", "hdh_drawer_fail", 0]],
       baseEps: [["failure", "base_drawer_fail", 0], ["success", "base_drawer_success", 1]],
     },
     closet: {
       name: "Strawberry into closet; close door", hdh: 28, base: 16,
-      desc: "<b>Strawberry into closet; close door.</b> Place the strawberry inside the closet, then close its door. Success requires both stages.",
+      desc: "<b>Strawberry into closet.</b> Put the strawberry in, then close the door.",
       hdhEps: [["success 1", "hdh_closet_success_1", 1], ["success 2", "hdh_closet_success_2", 1], ["failure 1", "hdh_closet_fail_1", 0], ["failure 2", "hdh_closet_fail_2", 0]],
       baseEps: [["failure", "base_closet_fail", 0], ["success", "base_closet_success", 1]],
     },
