@@ -1,4 +1,4 @@
-/* HDH project page — theme, lazy video, real-robot comparison, charts */
+/* HDH project page — lazy video, real-robot comparison, charts */
 (function () {
   "use strict";
   const $ = (s, r = document) => r.querySelector(s);
@@ -37,14 +37,6 @@
       baseEps: [["failure", "base_closet_fail", 0], ["success", "base_closet_success", 1]],
     },
   };
-
-  /* ---------------- theme ---------------- */
-  const themeBtn = $("#themeBtn");
-  if (themeBtn) themeBtn.addEventListener("click", () => {
-    const t = root.getAttribute("data-theme") === "light" ? "dark" : "light";
-    root.setAttribute("data-theme", t);
-    try { localStorage.setItem("hdh-theme", t); } catch {}
-  });
 
   /* ---------------- progress bar ---------------- */
   const prog = $("#progress");
